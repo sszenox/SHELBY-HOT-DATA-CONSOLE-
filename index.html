@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shelby Hot Data Console</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Decentralized hot storage for high-frequency data</p>
+          <h1>Shelby Hot Data Console</h1>
+          <p>
+            Store AI events, analytics signals, and media manifests on a Shelby-style hot-storage layer,
+            then retrieve them with sub-second reads, ownership controls, and access-aware serving.
+          </p>
+        </div>
+        <div class="node-map" aria-label="Live Shelby node simulation">
+          <span class="node node-a"></span>
+          <span class="node node-b"></span>
+          <span class="node node-c"></span>
+          <span class="node node-d"></span>
+          <span class="node node-e"></span>
+          <div class="pulse pulse-one"></div>
+          <div class="pulse pulse-two"></div>
+          <div class="pulse pulse-three"></div>
+        </div>
+      </section>
+
+      <section class="status-band">
+        <article>
+          <span id="storedCount">0</span>
+          <p>hot objects stored</p>
+        </article>
+        <article>
+          <span id="avgLatency">0 ms</span>
+          <p>average read latency</p>
+        </article>
+        <article>
+          <span id="readCount">0</span>
+          <p>verified reads</p>
+        </article>
+        <article>
+          <span id="ownerCount">0</span>
+          <p>active owners</p>
+        </article>
+      </section>
+
+      <section class="workspace">
+        <aside class="control-panel">
+          <div class="panel-heading">
+            <p class="eyebrow">Ingest stream</p>
+            <h2>Publish hot content</h2>
+          </div>
+
+          <label>
+            Workload
+            <select id="workload">
+              <option value="AI Pipeline">AI Pipeline</option>
+              <option value="Analytics Dashboard">Analytics Dashboard</option>
+              <option value="Media Platform">Media Platform</option>
+              <option value="DePIN Feed">DePIN Feed</option>
+            </select>
+          </label>
+
+          <label>
+            Owner wallet
+            <input id="owner" type="text" value="0xA17...Shelby" />
+          </label>
+
+          <label>
+            Access policy
+            <select id="policy">
+              <option value="owner-gated">Owner gated</option>
+              <option value="token-gated">Token gated</option>
+              <option value="public-metered">Public metered</option>
+            </select>
+          </label>
+
+          <label>
+            Content payload
+            <textarea id="payload" rows="8">{"model":"vision-indexer","frame":1242,"embeddingWindow":"30s","confidence":0.94}</textarea>
+          </label>
+
+          <div class="button-row">
+            <button id="publishBtn" type="button">Publish</button>
+            <button id="burstBtn" class="secondary" type="button">Burst x12</button>
+          </div>
+        </aside>
+
+        <section class="data-surface">
+          <div class="surface-header">
+            <div>
+              <p class="eyebrow">Fast retrieval layer</p>
+              <h2>Hot object explorer</h2>
+            </div>
+            <div class="segmented" role="tablist" aria-label="View mode">
+              <button class="active" data-filter="all" type="button">All</button>
+              <button data-filter="AI Pipeline" type="button">AI</button>
+              <button data-filter="Analytics Dashboard" type="button">Analytics</button>
+              <button data-filter="Media Platform" type="button">Media</button>
+            </div>
+          </div>
+
+          <div id="objectGrid" class="object-grid"></div>
+        </section>
+      </section>
+
+      <section class="insights">
+        <div class="stream-panel">
+          <div class="panel-heading">
+            <p class="eyebrow">Read telemetry</p>
+            <h2>Latency profile</h2>
+          </div>
+          <canvas id="latencyChart" width="760" height="260" aria-label="Read latency chart"></canvas>
+        </div>
+        <div class="stream-panel">
+          <div class="panel-heading">
+            <p class="eyebrow">Shelby adapter</p>
+            <h2>Integration notes</h2>
+          </div>
+          <pre><code>import { ShelbyClient } from "@shelby-protocol/sdk/browser";
+import { Network } from "@aptos-labs/ts-sdk";
+
+const shelby = new ShelbyClient({
+  network: Network.TESTNET,
+  apiKey: import.meta.env.VITE_SHELBY_API_KEY
+});
+
+await shelby.storage.upload(file, { metadata });
+await shelby.storage.download(contentId);</code></pre>
+        </div>
+      </section>
+    </main>
+
+    <template id="objectCardTemplate">
+      <article class="object-card">
+        <div class="card-top">
+          <span class="type-pill"></span>
+          <button class="read-button" type="button">Read</button>
+        </div>
+        <h3></h3>
+        <p class="payload-preview"></p>
+        <dl>
+          <div>
+            <dt>Owner</dt>
+            <dd class="owner-value"></dd>
+          </div>
+          <div>
+            <dt>Policy</dt>
+            <dd class="policy-value"></dd>
+          </div>
+          <div>
+            <dt>Content ID</dt>
+            <dd class="cid-value"></dd>
+          </div>
+          <div>
+            <dt>Reads</dt>
+            <dd class="reads-value"></dd>
+          </div>
+        </dl>
+      </article>
+    </template>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
